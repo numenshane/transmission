@@ -15,7 +15,8 @@ function rename_and_decompress_nonrecursive {
 	# filter specific chars
 	cd "$1"
 	Find_cmd="find . -maxdepth 1 -type f"
-	$Find_cmd -name '*' -exec bash -c '/usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\[|\]|\\\//g" "$1"' -- {} \;
+	# $Find_cmd -name '*' -exec bash -c '/usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\[|\]|\\\//g" "$1"' -- {} \;
+	$Find_cmd -name '*' -exec bash -c '/usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\【|\】|\）|\：|\（|\《|\》|\[|\]|\\\//g" "$1"' -- {} \;
 	
 	$Find_cmd -name "*.zip" -exec bash -c 'unzip "$1" -d . && rm "$1"' -- {} \;
 	$Find_cmd -name "*.tar" -exec bash -c 'tar -xvf "$1" && rm "$1"' -- {} \;
