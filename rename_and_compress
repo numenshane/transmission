@@ -1,0 +1,60 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 \$srcDir"
+    echo -e "\t delete fileName with \",:()[]{}&\""
+    echo -e "\t then no loss compress video files with suffix .mkv .avi .webm .mp4"
+    echo -e "\t byby!" && exit 0
+fi
+
+srcDir=$1
+rename="perl /usr/bin/rename_pl"
+HANDBRAKE_CLI="/usr/bin/HandBrakeCLI"
+
+function rename_and_decompress_nonrecursive {
+	# filter specific chars
+	cd "$1"
+	Find_cmd="find . -maxdepth 1 -type f"
+	$Find_cmd -name '*' -exec bash -c '/usr/bin/rename_pl "s/ |:|,|@|#|&|;|\(|\)|\[|\]|\\\//g" "$1"' -- {} \;
+	
+	$Find_cmd -name "*.zip" -exec bash -c 'unzip "$1" -d . && rm "$1"' -- {} \;
+	$Find_cmd -name "*.tar" -exec bash -c 'tar -xvf "$1" && rm "$1"' -- {} \;
+}
+
+function compress_recursive {
+        cd "$1"
+	# filter excluding media file size < 5M 
+	Find_cmd="find . -size +100M -type f"
+	# iterate dir and decompress file 
+	# test : find $srcDir -name "*.mp4" -type f -exec bash -c 'echo $1' -- {} \;
+	# don't use $HANDBRAKE_CLI in find exec clause, don't do variable 赋值替换
+	$Find_cmd -iname "*.mp4" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;
+	$Find_cmd -iname "*.avi" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;
+	$Find_cmd -iname "*.webm" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;
+	$Find_cmd -iname "*.mkv" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;	
+	$Find_cmd -iname "*.mov" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;	
+	$Find_cmd -iname "*.m4a" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;	
+	$Find_cmd -iname "*.3gp" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;	
+	$Find_cmd -iname "*.mj2" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;	
+	$Find_cmd -iname "*.rmvb" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;	
+	$Find_cmd -iname "*.mpg" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;	
+	$Find_cmd -iname "*.wmv" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;	
+	$Find_cmd -iname "*.mpeg" -exec bash -c '/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1"' -- {} \;	
+}
+
+if [ -f "$1" ]; then 
+    echo "for file:$1, directly do unzip untar"
+    tmpDir=/tmp/`date +%Y-%m-%d-%H-%M-%S`
+    DataDir=/home/youtube
+    if [[ "$1" =~ \.zip$ ]]; then unzip "$1" -d $tmpDir && mv $tmpDir $DataDir && rm "$1"; fi
+    if [[ "$1" =~ \.tar$ ]]; then tar -xvf "$1" -C $tmpDir && mv $tmpDir $DataDir && rm "$1"; fi
+    if [[ "$1" =~ \.t?gz$ ]]; then gunzip "$1" > $tmpDir && mv $tmpDir $DataDir && rm "$1"; fi
+    # don't put seed files in a top root dir, compress and keep the compressed file, and rename to original 
+    if [[ "$1" =~ \.mp4 ]] || [[ "$1" =~ \.wmv ]] || [[ "$1" =~ \.mpg ]] || [[ "$1" =~ \.mpeg ]] || [[ "$1" =~ \.avi ]] || [[ "$1" =~ \.webm ]] || [[ "$1" =~ \.mkv ]] || [[ "$1" =~ \.mov ]] || [[ "$1" =~ \.m4a ]] || [[ "$1" =~ \.3gp ]] || [[ "$1" =~ \.mj2 ]] || [[ "$1" =~ \.rmvb ]]; then mv "$1" "$1.mp4" && /usr/bin/HandBrakeCLI -i "$1.mp4" -o "$1" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1.mp4"; fi
+else
+    # for dir 
+    #first unzip/untar compressed files
+    find "$1" -type d -print0 | while IFS= read -r -d $'\0' line; do rename_and_decompress_nonrecursive "$line" ; done
+    #Second compress media files 
+    compress_recursive "$1"
+fi

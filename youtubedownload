@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]]; then
+        echo "Usage: $0 srcDownloadUrl"
+        exit 0 
+fi
+PAFY_BACKEND="internal"
+
+random_flag=`cat /dev/urandom | tr -cd '0-1' | head -c 1`
+if [[ $random_flag -eq 1 ]]; then
+	dataSrc=/home/tmp/`cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32`
+	dataDestDir=/home/youtube
+else
+	dataSrc=/Data/tmp/`cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32`
+	dataDestDir=/Data/youtube
+fi
+
+mkdir -p "$dataSrc" && cd "$dataSrc"
+
+#ytdl -b "$1"
+youtube-dl  -f mp4 "$1"
+
+if [[ $? -eq 0 ]]; then 
+        mv * $dataDestDir/ 
+	echo "suc !!!"
+else
+	echo "aborted !!!"
+fi
+rm -fr "$dataSrc"

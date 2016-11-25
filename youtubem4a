@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]]; then
+        echo "Usage: $0 srcDownloadUrl"
+        exit 0 
+fi
+PAFY_BACKEND="internal"
+
+dataSrc=/home/tmp/`cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32`
+mkdir -p "$dataSrc" && cd "$dataSrc"
+dataDestDir=/Data/youtube
+
+#ytdl -a "$1"
+youtube-dl -f m4a "$1"
+
+if [[ $? -eq 0 ]]; then 
+        mv * $dataDestDir/ 
+	echo "suc !!!"
+else
+	echo "aborted !!!"
+fi
+rm -fr "$dataSrc"

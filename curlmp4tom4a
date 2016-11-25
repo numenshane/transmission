@@ -1,0 +1,68 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]]; then
+        echo "Usage: $0 outputFileName srcDownloadUrl"
+        exit 0 
+fi
+
+ffmpeg=/usr/bin/ffmpeg
+
+dataSrc=/Data/tmp/
+mkdir -p $dataSrc
+
+dataDestDir=/Data/youtube
+
+dl="curl -# -L -o "
+
+cd $dataSrc
+echo curl -# -L -o "$1" -C - "$2"
+$dl "$1" -C - "$2"
+
+# compression
+#/usr/bin/HandBrakeCLI -i "$1" -o "$1.mp4" -e x264 -q 22 -r 12 -B 64 -X 480 -O
+
+DEST_EXT=m4a  # hardcode for convinent 
+if [ $# -gt 2 ]; then
+	DEST_EXT=$3
+fi
+
+$ffmpeg -i "$1" -vn -acodec copy "$1.$DEST_EXT"
+
+suc=0
+
+if [ ! -e "$1.$DEST_EXT" ]; then
+    echo moving "$1" to $dataDestDir
+    mv -f "$1" $dataDestDir/
+    cd $dataDestDir
+	perl /usr/bin/rename_pl "s/ |:|,|\||\。|\！|\？|&|#|\?|\*|;|\(|\)|\[|\]|\\\//g" "$1"
+else
+
+    # move to destDir && rename filtering 
+    # delete downloaded file then move compressed file 
+    rm -f "$1"
+
+    echo moving "$1.$DEST_EXT" to $dataDestDir
+    mv -f "$1.$DEST_EXT" $dataDestDir/
+    cd $dataDestDir
+    perl /usr/bin/rename_pl "s/ |:|,|\||\。|\！|\？|&|#|\?|\*|;|\(|\)|\[|\]|\\\//g" "$1.$DEST_EXT"
+fi
+
+exit 0
+
+filename="$(basename "$1")"
+extension="${filename##*.}"
+filename="${filename%.*}"	
+
+DEST_EXT=m4a  # hardcode for convinent 
+if [ $# -gt 2 ]; then
+	DEST_EXT=$3
+fi
+
+$ffmpeg -i "$1" -vn -acodec copy "$filename.$DEST_EXT"
+
+if [[ $? -eq 0 ]]; then
+	echo "delete original $i" 
+	rm -f $i
+        echo moving "$filename.$DEST_EXT" to $dataDestDir
+        mv "$filename.$DEST_EXT" $dataDestDir/ 
+fi
