@@ -44,6 +44,7 @@ function compress_recursive {
 }
 
 if [ -f "$1" ]; then 
+    # for compressed file, just decompress and directly move to destDir
     echo "for file:$1, directly do unzip untar"
     tmpDir=/tmp/`date +%Y-%m-%d-%H-%M-%S`
     DataDir=/home/youtube
@@ -51,10 +52,12 @@ if [ -f "$1" ]; then
     if [[ "$1" =~ \.tar$ ]]; then tar -xvf "$1" -C $tmpDir && mv $tmpDir $DataDir && rm "$1"; fi
     if [[ "$1" =~ \.t?gz$ ]]; then gunzip "$1" > $tmpDir && mv $tmpDir $DataDir && rm "$1"; fi
     # don't put seed files in a top root dir, compress and keep the compressed file, and rename to original 
+    
+    # for medil file, just coding it and keep original name, let invoking scripts to move to destDir 
     if [[ "$1" =~ \.mp4 ]] || [[ "$1" =~ \.wmv ]] || [[ "$1" =~ \.mpg ]] || [[ "$1" =~ \.mpeg ]] || [[ "$1" =~ \.avi ]] || [[ "$1" =~ \.webm ]] || [[ "$1" =~ \.mkv ]] || [[ "$1" =~ \.mov ]] || [[ "$1" =~ \.m4a ]] || [[ "$1" =~ \.3gp ]] || [[ "$1" =~ \.mj2 ]] || [[ "$1" =~ \.rmvb ]]; then mv "$1" "$1.mp4" && /usr/bin/HandBrakeCLI -i "$1.mp4" -o "$1" -e x264 -q 22 -r 12 -B 64 -X 480 -O && rm "$1.mp4"; fi
 else
     # for dir 
-    #first unzip/untar compressed files
+    #first unzip/untar compressed files, keep dir name, process toppest file (rename, decompress if necessary)inside, then coding recursively for inside files
     find "$1" -type d -print0 | while IFS= read -r -d $'\0' line; do rename_and_decompress_nonrecursive "$line" ; done
     #Second compress media files 
     compress_recursive "$1"
