@@ -7,6 +7,7 @@ fi
 PAFY_BACKEND="internal"
 
 random_flag=`cat /dev/urandom | tr -cd '0-1' | head -c 1`
+random_flag=1
 if [[ $random_flag -eq 1 ]]; then
 	dataSrc=/home/tmp/`cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32`
 	dataDestDir=/home/youtube
