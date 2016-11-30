@@ -11,12 +11,20 @@ chmod 755 /usr/bin/rename_and_compress
 cp rename_pl /usr/bin/rename_pl
 chmod 755 /usr/bin/rename_pl
 
-curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
-python get-pip.py
+whereis pip | grep /usr
+if [ $? -ne 0 ]; then
+	curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+	python get-pip.py
+	rm get-pip.py
+fi
+
 pip install pafy
-rm get-pip.py
-curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
-chmod a+rx /usr/local/bin/youtube-dl
+
+whereis youtube-dl |grep /usr
+if [ $? -ne 0 ]; then
+	curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
+	chmod a+rx /usr/local/bin/youtube-dl
+fi
 
 cp curldownload /usr/bin/curldownload
 cp curlhandbrake /usr/bin/curlhandbrake
