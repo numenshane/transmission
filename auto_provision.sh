@@ -43,8 +43,8 @@ echo "config & start transmission daemon service to create settings.xml"
 echo "shutdown service then modify settings and save, restart" 
 
 echo "editing crontab manually
-*/2 * * * * ( /Data/transmission/transmission-purge-complete.sh /Data/transmission/downloaded >> /Data/transmission/transmission_complete.log 2>&1 )
-0 0 * * * ( /Data/transmission/transmission-purge-no-seed.sh >> /Data/transmission/transmission_no_seed.log 2>&1 )
+*/2 * * * * ( /Data/transmission/transmission-purge-complete.sh user:password /Data/transmission/downloaded >> /Data/transmission/transmission_complete.log 2>&1 )
+0 0 * * * ( /Data/transmission/transmission-purge-no-seed.sh user:password >> /Data/transmission/transmission_no_seed.log 2>&1 )
 0 0 1 * * ( cat /dev/null > /Data/transmission/transmission_complete.log )
 0 0 1 * * ( cat /dev/null > /Data/transmission/transmission_no_seed.log ) 
 done!"
