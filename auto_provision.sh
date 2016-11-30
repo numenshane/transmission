@@ -30,7 +30,7 @@ cp curldownload /usr/bin/curldownload
 cp curlhandbrake /usr/bin/curlhandbrake
 cp curlmp4tom4a /usr/bin/curlmp4tom4a
 cp youtubedownload /usr/bin/youtubedownload
-cp youtubem4a /usr/bin/youtubem4a
+cp youm4a /usr/bin/youm4a
 
 echo "installing handbrake"
 if [ ! -e /etc/yum.repos.d/linuxtech.repo ] ; then 
