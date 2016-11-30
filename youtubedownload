@@ -1,20 +1,20 @@
 #!/bin/bash
 
 if [[ $# -lt 1 ]]; then
-        echo "Usage: $0 srcDownloadUrl dataDestDir"
+        echo "Usage: $0 srcDownloadUrl dataDestLocalDir"
         exit 0 
 fi
 
 if [ $# -gt 1 ]; then
-	dataDestDir=$2
+	dataDestLocalDir=$2
 else 
 	random_flag=`cat /dev/urandom | tr -cd '0-1' | head -c 1`
 	random_flag=1
 	if [[ $random_flag -eq 1 ]]; then
-		dataDestDir=/home/youtube
+		dataDestLocalDir=/home/youtube
 	else
 		dataSrc=/Data/tmp/`cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32`
-		dataDestDir=/Data/youtube
+		dataDestLocalDir=/Data/youtube
 	fi
 fi
 
@@ -27,8 +27,8 @@ mkdir -p "$dataSrc" && cd "$dataSrc"
 youtube-dl -f mp4 "$1"
 
 if [[ $? -eq 0 ]]; then 
-	mkdir -p "$dataDestDir"
-        mv * "$dataDestDir/" 
+	mkdir -p "$dataDestLocalDir"
+        mv * "$dataDestLocalDir/" 
 	echo "+++$1 suc !!! +++"
 else
 	echo "---$1 aborted !!! ---"
