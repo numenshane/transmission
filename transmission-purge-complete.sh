@@ -3,8 +3,10 @@
 
 # the folder to move completed downloads to
 # port, username, password
-SERVER="9091 --auth username:password" #never give you passwd in text
-destDir="$1"
+usrpass="$1"
+SERVER="9091 --auth $1" #never give you passwd in text
+
+destDir="$2"
 
 logDir="/Data/transmission"
 pidFile=${logDir}/pid

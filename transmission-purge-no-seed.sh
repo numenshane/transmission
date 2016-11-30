@@ -3,7 +3,8 @@
 # the folder to move completed downloads to
 
 # port, username, password
-SERVER="9091 --auth username:password"
+usrpass="$1"
+SERVER="9091 --auth $1" #never give you passwd in text
 
 # use transmission-remote to get torrent list from transmission-remote list
 # use sed to delete first / last line of output, and remove leading spaces
