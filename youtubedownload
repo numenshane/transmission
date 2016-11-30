@@ -5,7 +5,7 @@ if [[ $# -lt 2 ]]; then
         exit 0 
 fi
 
-if [ $# -eq 2 ]; then
+if [ $# -gt 1 ]; then
 	dataDestDir=$2
 else 
 	random_flag=`cat /dev/urandom | tr -cd '0-1' | head -c 1`
