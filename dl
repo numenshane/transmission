@@ -13,7 +13,6 @@ else
 	if [[ $random_flag -eq 1 ]]; then
 		dataDestLocalDir=/home/youtube
 	else
-		dataSrc=/Data/tmp/`cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32`
 		dataDestLocalDir=/Data/youtube
 	fi
 fi
