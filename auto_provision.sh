@@ -41,7 +41,9 @@ if [ ! -e /etc/yum.repos.d/linuxtech.repo ] ; then
 fi
 
 echo "installing ffmpeg"
-yum install ffmpeg -y 2>&1 > /dev/null
+rpm --import http://li.nux.ro/download/nux/RPM-GPG-KEY-nux.ro 2>&1 > /dev/null
+rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm 2>&1 > /dev/null
+yum install ffmpeg ffmpeg-devel -y 2>&1 > /dev/null
 yum install transmission transmission-daemon -y 2>&1 > /dev/null
 
 echo "config & start transmission daemon service to create settings.xml"
