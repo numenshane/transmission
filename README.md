@@ -22,8 +22,8 @@ author: TianChi Date: 2015-12
         chown -R transmission:transmission /var/lib/transmission/.config/  
         chown -R transmission:transmission /var/log/transmission
         # 初次启动服务，在设置的目录下生成对应配置文件 /var/lib/transmission/.config/transmission-daemon/settings.json 
-            /etc/init.d/transmission-daemon start
-            /etc/init.d/transmission-daemon stop
+            systemctl start transmission-daemon
+            systemctl stop transmission-daemon
         # 确保daemon服务已关闭，才能修改settings.json的授权 密码
         vi /var/lib/transmission/.config/transmission-daemon/settings.json
             "download-dir": "/var/lib/transmission/Downloads", 
