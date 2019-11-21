@@ -9,7 +9,7 @@ if [ $# -gt 1 ]; then
 	dataDestLocalDir=$2
 else 
 	random_flag=`cat /dev/urandom | tr -cd '0-1' | head -c 1`
-	random_flag=1
+	#random_flag=0
 	if [[ $random_flag -eq 1 ]]; then
 		dataDestLocalDir=/home/youtube
 	else
