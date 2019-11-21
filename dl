@@ -23,7 +23,8 @@ mkdir -p "$dataSrc" && cd "$dataSrc"
 #PAFY_BACKEND="internal"
 #ytdl -b "$1"
 
-youtube-dl -f mp4 "$1"
+#youtube-dl -f mp4 "$1"
+youtube-dl -f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/bestvideo+bestaudio/best[ext=mp4]/best' --merge-output-format mp4 "$1"
 
 if [[ $? -eq 0 ]]; then 
 	mkdir -p "$dataDestLocalDir"
