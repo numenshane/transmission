@@ -17,7 +17,7 @@ else
 	fi
 fi
 
-dataSrc=/home/tmp/`cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32`
+dataSrc=/Data/tmp/`cat /dev/urandom | tr -cd 'a-f0-9' | head -c 32`
 mkdir -p "$dataSrc" && cd "$dataSrc"
 
 #PAFY_BACKEND="internal"
