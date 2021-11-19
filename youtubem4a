@@ -13,6 +13,13 @@ dataDestDir=/Data/youtube
 #ytdl -a "$1"
 youtube-dl -f 'bestaudio[ext=m4a]/m4a' "$1"
 
+# filtering filename --- get filename and rename file
+#find . -maxdepth 1 -type f -exec bash -c 'if [ "$1" != "." ]; then bypy upload "$1"; fi' -- {} \; -exec \
+#	bash -c 'f=$(echo "$1"|sed "s/^\.\///"); bypy search "$f"|grep -vi "Nothing found" >> /dev/null && rm -fr "$1" && echo $(date) safely remove "$1" ' -- {} \;
+f1=""
+f2=""
+find . -maxdepth 1 -type f -exec bash -c 'if [ "$1" != "." ]; then echo check filename format for "$1" && f1=$(echo "$1"|sed "s/^\.\///"); f2=$(echo "$1"|sed "s/^\.\///"|sed "s/\ /_/g"|sed "s/\,/_/g"|sed "s/\?/_/g"|sed "s/\í ¼í¾µ/_/g"); fi; if [ "$f1" != "$f2" ]; then echo rename file "$f1" to "$f2" && mv "$f1" "$f2"; fi' -- {} \;
+
 if [[ $? -eq 0 ]]; then 
         mv * $dataDestDir/ 
 	echo "suc !!!"
